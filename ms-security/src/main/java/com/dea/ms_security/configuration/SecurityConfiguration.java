@@ -29,7 +29,7 @@ public class SecurityConfiguration {
             .authorizeHttpRequests(authorize -> 
                 authorize
                     .requestMatchers("/api/hello").permitAll()
-                    .requestMatchers("/api/intro").hasRole("USER") 
+                    .requestMatchers("/api/intro").permitAll()
                     .anyRequest().authenticated()
         ).build();
     }
