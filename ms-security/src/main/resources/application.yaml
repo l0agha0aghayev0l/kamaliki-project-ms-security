@@ -1,0 +1,30 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: ms-security
+
+  output:
+    ansi:
+      enabled: ALWAYS
+  
+  datasource:
+    url: jdbc:mysql://localhost:3306/kamaliki_ms_security
+    username: root
+    password: 1234
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+
+jwt:
+  secret: agha-hates-scratch-kamal-kuratnik-tamerlan-uzbekskiy-plov
+  accessExpirationMs: 1800000
+  refreshExpirationMs: 31557600000 
