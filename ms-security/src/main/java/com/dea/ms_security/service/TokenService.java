@@ -2,17 +2,24 @@ package com.dea.ms_security.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import com.dea.ms_security.dto.UserDto;
+import com.dea.ms_security.enumeration.AccessTokenClaimsEnum;
 import com.dea.ms_security.enumeration.TokenType;
 import com.dea.ms_security.error.InvalidTokenException;
+import com.dea.ms_security.error.TokenException;
 import com.dea.ms_security.mapper.UserMapper;
 import com.dea.ms_security.repository.UserRepository;
 import com.dea.ms_security.response.TokenResponse;
 import com.dea.ms_security.util.JwtUtil;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -21,7 +28,7 @@ public class TokenService {
 
     private final JwtUtil jwtUtil;
     private final UserRepository userRepository;
-    
+
     public List<TokenResponse> refreshAccessToken(String refreshToken) {
         if (jwtUtil.validateToken(refreshToken)) {
             List<TokenResponse> responses = new ArrayList<>();
@@ -33,4 +40,17 @@ public class TokenService {
         }
         throw new InvalidTokenException("Invalid refresh token");
     }
+
+    public String getUsernameFromToken() {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication != null && authentication.isAuthenticated()) {
+            Object principal = authentication.getPrincipal();
+                UserDetails userDetails = (UserDetails) principal;
+                return userDetails.getUsername();
+        }
+        throw new TokenException("ninga");
+    }
+
 }
