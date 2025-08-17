@@ -19,7 +19,7 @@ public class UserController {
     private final TokenService tokenService;
 
     @GetMapping("/username")
-    public ResponseEntity<String> getMethodName() {
+    public ResponseEntity<String> getActiveUser() {
         return ResponseEntity.ok().body(tokenService.getUsernameFromToken());
     }
     
