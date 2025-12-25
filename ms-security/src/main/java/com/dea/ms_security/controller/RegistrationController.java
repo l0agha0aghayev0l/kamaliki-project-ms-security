@@ -22,13 +22,11 @@ public class RegistrationController {
 
     private final UserService userService;
 
-    // Registration for CUSTOMER
     @PostMapping("/customer")
     public ResponseEntity<Map<String, String>> registerCustomer(@RequestBody @Valid RegistrationRequest registrationRequest) {
         userService.registration(registrationRequest, UserRoleEnum.ROLE_CUSTOMER);
         return ResponseEntity.ok(Map.of("message", "Registration successful"));
     }
-    // Registration for ADMIN
 
     @PostMapping("/admin")
     public ResponseEntity<Map<String, String>> registerAdmin(@RequestBody @Valid RegistrationRequest registrationRequest) {

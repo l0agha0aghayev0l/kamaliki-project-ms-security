@@ -3,6 +3,9 @@ package com.dea.ms_security.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.dea.ms_security.response.UserTokenResponse;
+import com.dea.ms_security.response.UsernameResponse;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -25,26 +28,37 @@ public class TokenService {
 
     private final JwtUtil jwtUtil;
     private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
     public TokenResponse refreshAccessToken(TokenRequest tokenRequest) {
         String refreshToken = tokenRequest.getToken();
         if (jwtUtil.validateToken(refreshToken)) {
             String uuid = jwtUtil.getAllClaims(refreshToken).getSubject();
-            UserDto userDto = UserMapper.INSTANCE.toUserDto(userRepository.findByUuid(uuid));
+            UserDto userDto = userMapper.toUserDto(userRepository.findByUuid(uuid));
             return new TokenResponse(TokenType.ACCESS_TOKEN, jwtUtil.generateAccessToken(userDto));
         }
         throw new InvalidTokenException("Invalid refresh token");
     }
 
-    public String getUsernameFromToken() {
+    public UsernameResponse getUsernameFromToken() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Object principal = authentication.getPrincipal();
 
         if (principal instanceof UserDetails userDetails) {
-            return userDetails.getUsername();
+            return new UsernameResponse(userDetails.getUsername());
         } else {
-            return principal.toString();
+            return new UsernameResponse(principal.toString());
         }
+    }
+
+    public UserTokenResponse getUserData(String token) {
+        var updatedToken = token.substring(7);
+        var claim = jwtUtil.getAllClaims(updatedToken);
+        UserTokenResponse userTokenResponse = new UserTokenResponse();
+        userTokenResponse.setUuid(claim.getSubject());
+        userTokenResponse.setUsername(claim.get("username").toString());
+        userTokenResponse.setRoles(claim.get("roles", List.class));
+        return userTokenResponse;
     }
 
 }

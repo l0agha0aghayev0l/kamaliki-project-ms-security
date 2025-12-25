@@ -23,6 +23,7 @@ public class AuthService {
 
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
+    private final UserMapper userMapper;
 
     public Set<TokenResponse> login(LoginRequest loginRequest) {
         Set<TokenResponse> tokens = new HashSet<>();
@@ -32,7 +33,7 @@ public class AuthService {
 
         UserDetailsImplementation userDetails = (UserDetailsImplementation) authentication.getPrincipal();
 
-        tokens.add(new TokenResponse(TokenType.ACCESS_TOKEN, jwtUtil.generateAccessToken(UserMapper.INSTANCE.toUserDto(userDetails.getUSER()))));
+        tokens.add(new TokenResponse(TokenType.ACCESS_TOKEN, jwtUtil.generateAccessToken(userMapper.toUserDto(userDetails.getUSER()))));
         tokens.add(new TokenResponse(TokenType.REFRESH_TOKEN, jwtUtil.generateRefreshToken(userDetails.getUSER().getUuid())));
         return tokens;
     }

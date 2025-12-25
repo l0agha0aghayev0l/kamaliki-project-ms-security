@@ -2,6 +2,7 @@ package com.dea.ms_security.controller;
 
 import java.util.Set;
 
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,12 +17,11 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequiredArgsConstructor
 public class AuthController {    
-    //login
 
     private final AuthService authService;
 
     @PostMapping("/login")
-    public ResponseEntity<Set<TokenResponse>> login(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<Set<TokenResponse>> login(@Valid @RequestBody LoginRequest loginRequest) {
         
         return ResponseEntity.ok(authService.login(loginRequest));
     }

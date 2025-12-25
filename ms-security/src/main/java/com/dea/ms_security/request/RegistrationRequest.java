@@ -10,8 +10,6 @@ public record RegistrationRequest(
     @NotBlank String name,
     @NotBlank String surname,
     @NotBlank @Email String email,
-    @NotBlank @Length(min = 8, max = 16) String password,
-    @NotBlank String confirmPassword
-) {
+    @NotBlank @Length(min = 8, max = 16) String password) {
     
 }

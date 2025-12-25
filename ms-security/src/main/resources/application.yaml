@@ -25,6 +25,6 @@ spring:
     locations: classpath:db/migration
 
 jwt:
-  secret: agha-hates-scratch-kamal-kuratnik-tamerlan-uzbekskiy-plov
+  secret: 3cfa76ef14937c1c0ea519f8fc057a80fcd04a7420f8e8bcd0a7567c272e007b
   accessExpirationMs: 1800000
   refreshExpirationMs: 31557600000 

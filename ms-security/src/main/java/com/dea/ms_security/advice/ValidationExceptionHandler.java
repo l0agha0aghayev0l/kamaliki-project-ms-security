@@ -13,12 +13,15 @@ import com.dea.ms_security.error.UserIsAlreadyExistsException;
 import com.dea.ms_security.response.ValidationResponse;
 
 @RestControllerAdvice
-public class ValidationExeptionHandler {
+public class ValidationExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<List<ValidationResponse>> handleValidationException(MethodArgumentNotValidException ex) {
         List<ValidationResponse> errors = ex.getBindingResult().getFieldErrors().stream()
-                .map(err -> new ValidationResponse(err.getField(), err.getDefaultMessage())).toList();
+                .map(err -> {
+                    var message = err.getField() + " " + err.getDefaultMessage();
+                    return new ValidationResponse(err.getField(), message);
+                }).toList();
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(errors);
